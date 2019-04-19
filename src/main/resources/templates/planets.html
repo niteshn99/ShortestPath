@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>DHS – Offsite Java Assignment</title>
+
+    <link rel="stylesheet" th:href="@{/bootstrap-4.1.3-dist/css/bootstrap.min.css}"></link>
+    <link rel="stylesheet" th:href="@{/css/main.css}"></link>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">DHS – Offsite Java Assignment</a>
+    <a class="navbar-brand" href="/planets">Planets</a>
+    <a class="navbar-brand" href="/routes">Routes</a>
+</nav>
+
+<main role="main" class="container">
+    <div th:if="${alert != null}" class="alert alert-info alert-dismissible fade show" role="alert" style="margin-top: 20px;">
+        <strong th:text="${alert}"></strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="card" style="margin-top: 20px;">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-9">
+                    <h5>Interstellar Transport System</h5>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-default pull-right"
+                            data-toggle="modal" data-target="#newPlanetModal">
+                        Add New Planet
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Node</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="node : ${nodes}" >
+                        <td th:text="${node.id}"></td>
+                        <td th:text="${node.node}"></td>
+                        <td th:text="${node.name}"></td>
+                        <td>
+                            <button type="button" class="btn btn-default edit-planet"
+                                    th:data-id="${node.id}" th:data-node="${node.node}" th:data-name="${node.name}"
+                                    data-toggle="modal" data-target="#planetModal">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-default delete-planet"
+                                    th:data-id="${node.id}" th:data-node="${node.node}" th:data-name="${node.name}"
+                                    data-toggle="modal" data-target="#deletePlanetModal">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</main>
+
+<!-- New Planet Modal -->
+<div class="modal fade" id="newPlanetModal" tabindex="-1" role="dialog" aria-labelledby="newPlanetModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newPlanetModalLabel">Add New Planet</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" th:action="@{/planets}" th:object="${planetEdit}" th:method="post">
+                    <div class="form-group">
+                        <label for="nnode">NODE:</label>
+                        <input type="text" id="nnode" name="nnode" th:field="*{node}">
+                    </div>
+                    <div class="form-group">
+                        <label for="nname">NAME:</label>
+                        <input type="text" id="nname" name="nname" th:field="*{name}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Planet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Planet Modal -->
+<div class="modal fade" id="planetModal" tabindex="-1" role="dialog" aria-labelledby="planetModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="planetModalLabel">Planet Edit Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" th:action="@{/planets}" th:object="${planetEdit}" th:method="post">
+                    <div class="form-group">
+                        <label for="id">ID:</label>
+                        <input type="text" id="id" name="id" th:field="*{id}">
+                    </div>
+                    <div class="form-group">
+                        <label for="node">NODE:</label>
+                        <input type="text" id="node" name="node" th:field="*{node}">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">NAME:</label>
+                        <input type="text" id="name" name="name" th:field="*{name}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Delete Planet Modal -->
+<div class="modal fade" id="deletePlanetModal" tabindex="-1" role="dialog" aria-labelledby="deletePlanetModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletePlanetModalLabel">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" th:action="@{/planets}" th:object="${planetDelete}" th:method="delete">
+                    <div class="form-group">
+                        <input type="hidden" id="did" name="did" th:field="*{id}">
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" id="dnode" name="dnode" th:field="*{node}">
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" id="dname" name="dname" th:field="*{name}">
+                    </div>
+                    <span>By Clicking delete, <span id="deletename"></span> planet will be removed permanently from database</span>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Delete Planet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- /.container -->
+<script th:src="@{/js/jquery-3.4.0.min.js}"></script>
+<script th:src="@{/js/tooltip.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/bootstrap-4.1.3-dist/js/bootstrap.min.js}"></script>
+<script type="text/javascript">
+    $(document).on("click", ".edit-planet", function () {
+         var id = $(this).data('id');
+         var node = $(this).data('node');
+         var name = $(this).data('name');
+         $(".modal-body #id").val( id );
+         $(".modal-body #node").val( node );
+         $(".modal-body #name").val( name );
+    });
+
+    $(document).on("click", ".delete-planet", function () {
+         var id = $(this).data('id');
+         var node = $(this).data('node');
+         var name = $(this).data('name');
+         $(".modal-body #did").val( id );
+         $(".modal-body #dnode").val( node );
+         $(".modal-body #dname").val( name );
+         $(".modal-body #deletename").html( name );
+    });
+</script>
+</body>
+</html>
